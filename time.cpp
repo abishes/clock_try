@@ -14,7 +14,7 @@ public:
         float angle=PI/6;
         char numbers[13][3]={"3","4","5","6","7","8","9","10","11","12","1","2"};
         setcolor(LIGHTRED);
-        setlinestyle(SOLID_LINE,0,10);//The linestyle parameter does not affect circles. Only the thickness parameter is used.
+        setlinestyle(SOLID_LINE,0,10);
         circle(Wheight/2,Wheight/2,radius);
         settextstyle(SANS_SERIF_FONT,0,3);
         for(int i=0;i<12;i++){
@@ -73,9 +73,7 @@ public:
         line(Wheight/2, Wheight/2, Wheight/2+int(cos(angle)*length), Wheight/2+int(sin(angle)*length));
     }
 };
-void drawArms10times(int angle_second){//for smooth sense, time interval is 0.1 sec
 
-}
 void drawArms(float& angle_second, float& angle_minute, float& angle_hour){
     hand hour(H), minute(M), second(S);
     hour.drawHand(angle_hour);
