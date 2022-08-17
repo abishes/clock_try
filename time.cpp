@@ -5,8 +5,8 @@
 #define PI 3.14159265
 #define Wheight 750
 #define radius 300
+static char counting=0;
 enum clockHand{H=15,M=10, S=3};
-static float counting=0;
 class Proto{
 public:
     Proto(){
@@ -17,7 +17,7 @@ public:
         setlinestyle(SOLID_LINE,0,10);//The linestyle parameter does not affect circles. Only the thickness parameter is used.
         circle(Wheight/2,Wheight/2,radius);
         settextstyle(SANS_SERIF_FONT,0,3);
-        for(int i=0;i<13;i++){
+        for(int i=0;i<12;i++){
         outtextxy(Wheight/2+int(cos(i*angle)*length), Wheight/2+int(sin(i*angle)*length),numbers[i]);
         plt(Wheight/2+int(cos(i*angle)*length), Wheight/2+int(sin(i*angle)*length));
         }
@@ -76,8 +76,10 @@ public:
 void drawArms10times(int angle_second){//for smooth sense, time interval is 0.1 sec
 
 }
-void drawArms(float& angle_second){
-    hand  second(S);
+void drawArms(float& angle_second, float& angle_minute, float& angle_hour){
+    hand hour(H), minute(M), second(S);
+    hour.drawHand(angle_hour);
+    minute.drawHand(angle_minute);
     second.drawHand(angle_second);
     setcolor(LIGHTGRAY);
     circle(Wheight/2,Wheight/2,12);
@@ -87,21 +89,32 @@ void drawArms(float& angle_second){
     //to clear the screen
     setfillstyle(SOLID_FILL,BLACK);
     floodfill(Wheight/2,Wheight/2,LIGHTRED);
-    angle_second+=.115*(PI/30);//.1 +.015 //.1 is 10* .1 is 1 sec, but it is slowed down by 15% giving 0.015
+    angle_second+=.11*(PI/30);
+    if(angle_second >= 2*PI){
+        angle_second -=2*PI;
+        angle_minute +=PI/30;
+    }
+    if(angle_minute >= 2*PI){
+        angle_minute -=2*PI;
+        angle_hour +=PI/30;
+    }
+    if(angle_hour >= 2*PI)
+        angle_hour -=2*PI;
 
 }
 int main(){
     time_t now;
+    time(&now);
     struct tm *mytime;
     initwindow(Wheight, Wheight,"Clock");
     Proto ClockProto;
     mytime = localtime(&now);
-    float angle_hour=mytime->tm_hour;
-    float angle_minute=mytime->tm_min;
-    float angle_second= (mytime->tm_sec)*(PI/30);
+    float angle_hour=((mytime->tm_hour)%12)*(PI/6) + (mytime->tm_min)*(PI/360) + 3*(PI/2);
+    float angle_minute=(mytime->tm_min)*(PI/30)+3*(PI/2);
+    float angle_second= (mytime->tm_sec)*(PI/30)+3*(PI/2);
     while(1){
-        drawArms(angle_second);
+        drawArms(angle_second,angle_minute, angle_hour);
     }
     closegraph();
-
+    return 0;
 }
