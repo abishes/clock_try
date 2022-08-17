@@ -6,6 +6,7 @@
 #define Wheight 750
 #define radius 300
 enum clockHand{H=15,M=10, S=3};
+static float counting=0;
 class Proto{
 public:
     Proto(){
@@ -22,11 +23,17 @@ public:
         }
         setcolor(LIGHTRED);
         setlinestyle(SOLID_LINE,0,2);
-        circle(Wheight/2,Wheight/2,200);
-        setfillstyle(SOLID_FILL,BLACK);
-        floodfill(Wheight/2,Wheight/2,LIGHTRED);
+        circle(Wheight/2,Wheight/2,210);
     }
+
     void plt(int x,int y){
+        /*  for diamond shape
+              X
+             XXX
+            XXXXX
+             XXX
+              X
+        */
         for(int i=-1;i<=1;i++){
             for(int j=-1;j<=1;j++){
                putpixel(x+i,y+j,15);
@@ -38,7 +45,9 @@ public:
         putpixel(x+2,y,15);
 
     }
+
 };
+
 class hand{
 int thickness, length;
 float angle;
@@ -63,34 +72,36 @@ public:
         setlinestyle(SOLID_LINE,0,thickness);
         line(Wheight/2, Wheight/2, Wheight/2+int(cos(angle)*length), Wheight/2+int(sin(angle)*length));
     }
-    ~hand(){
-        setcolor(BLACK);
-        setlinestyle(SOLID_LINE,0,thickness);
-        line(Wheight/2, Wheight/2, Wheight/2+int(cos(angle)*length), Wheight/2+int(sin(angle)*length));
-    }
 };
-void drawArms(){
-    hand hour(H), minute(M), second(S);
-    hour.drawHand(0.3f);
-    minute.drawHand(1.2f);
-    second.drawHand(2.0f);
+void drawArms10times(int angle_second){//for smooth sense, time interval is 0.1 sec
+
+}
+void drawArms(float& angle_second){
+    hand  second(S);
+    second.drawHand(angle_second);
     setcolor(LIGHTGRAY);
     circle(Wheight/2,Wheight/2,12);
     setfillstyle(1,LIGHTGRAY);
     floodfill(Wheight/2,Wheight/2,LIGHTGRAY);
-    delay(2000);
+    delay(100);
     //to clear the screen
-    setcolor(LIGHTRED);
-    setlinestyle(SOLID_LINE,0,2);
-    circle(Wheight/2,Wheight/2,200);
     setfillstyle(SOLID_FILL,BLACK);
     floodfill(Wheight/2,Wheight/2,LIGHTRED);
+    angle_second+=.115*(PI/30);//.1 +.015 //.1 is 10* .1 is 1 sec, but it is slowed down by 15% giving 0.015
+
 }
 int main(){
+    time_t now;
+    struct tm *mytime;
     initwindow(Wheight, Wheight,"Clock");
     Proto ClockProto;
-    drawArms();
-    getch();
+    mytime = localtime(&now);
+    float angle_hour=mytime->tm_hour;
+    float angle_minute=mytime->tm_min;
+    float angle_second= (mytime->tm_sec)*(PI/30);
+    while(1){
+        drawArms(angle_second);
+    }
     closegraph();
 
 }
