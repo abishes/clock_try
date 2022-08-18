@@ -1,11 +1,9 @@
-#include <iostream>
 #include <graphics.h>
 #include <cmath>
 #include <ctime>
 #define PI 3.14159265
 #define Wheight 750
 #define radius 300
-static char counting=0;
 enum clockHand{H=15,M=10, S=3};
 class Proto{
 public:
@@ -18,8 +16,8 @@ public:
         circle(Wheight/2,Wheight/2,radius);
         settextstyle(SANS_SERIF_FONT,0,3);
         for(int i=0;i<12;i++){
-        outtextxy(Wheight/2+int(cos(i*angle)*length), Wheight/2+int(sin(i*angle)*length),numbers[i]);
-        plt(Wheight/2+int(cos(i*angle)*length), Wheight/2+int(sin(i*angle)*length));
+            outtextxy(Wheight/2+int(cos(i*angle)*length), Wheight/2+int(sin(i*angle)*length),numbers[i]);
+            plt(Wheight/2+int(cos(i*angle)*length), Wheight/2+int(sin(i*angle)*length));
         }
         setcolor(LIGHTRED);
         setlinestyle(SOLID_LINE,0,2);
@@ -43,9 +41,7 @@ public:
         putpixel(x,y+2,15);
         putpixel(x-2,y,15);
         putpixel(x+2,y,15);
-
     }
-
 };
 
 class hand{
@@ -98,13 +94,12 @@ void drawArms(float& angle_second, float& angle_minute, float& angle_hour){
     }
     if(angle_hour >= 2*PI)
         angle_hour -=2*PI;
-
 }
 int main(){
     time_t now;
     time(&now);
     struct tm *mytime;
-    initwindow(Wheight, Wheight,"Clock");
+    initwindow(Wheight, Wheight, "Clock");
     Proto ClockProto;
     mytime = localtime(&now);
     float angle_hour=((mytime->tm_hour)%12)*(PI/6) + (mytime->tm_min)*(PI/360) + 3*(PI/2);
